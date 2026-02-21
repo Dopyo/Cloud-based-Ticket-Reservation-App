@@ -2,6 +2,7 @@ package com.ticket.reservation;
 
 import com.ticket.reservation.model.User;
 import com.ticket.reservation.repository.UserRepository;
+import com.ticket.reservation.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,7 @@ import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 public class ReservationApplication implements CommandLineRunner {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ReservationApplication.class, args);
@@ -20,12 +21,12 @@ public class ReservationApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        User u = new User("Mike", "mike@email.com");
-//        userRepository.save(u);
-//
-//        userRepository.findAll().forEach(user ->
-//                System.out.println(user.getName() + " - " + user.getEmail())
-//        );
+        User u = new User("El", "el@email.com");
+        userService.createUser(u);
+
+        userService.getAllUsers().forEach(user ->
+                System.out.println(user.getName() + " - " + user.getEmail())
+        );
     }
 
 }
