@@ -2,20 +2,20 @@
 SOEN 345 Cloud-based Ticket Reservation Application - Winter 2026
 
 ## Team Members
-- Samaya Anwar
-  40248167
+- Aditi Abhaysingh Ingle
+  40266449
 
 - Da Fan He
   40215098
+  
+- Samaya Anwar
+  40248167
 
 - Emma Amar
   40174184
 
-- Aditi Abhaysingh Ingle
-  student id
-
 - Owen Jorgensen
-  student id
+  40227851
   
 
 ## Description
