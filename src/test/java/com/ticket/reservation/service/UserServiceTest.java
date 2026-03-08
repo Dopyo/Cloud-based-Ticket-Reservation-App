@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 import java.util.Optional;
 
@@ -21,16 +23,19 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService; // Inject mocked dependencies and create UserService instance
 
+    private BCryptPasswordEncoder passwordEncoder;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this); // Initialize all @Mock and @InjectMocks annotations before each test
+        passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Test
     void createUser_success() {
 
         // Arrange: create a new user and mock repository to return empty (no duplicates)
-        User user = new User("Test Name", "test@email.com", "1234567890");
+        User user = new User("Test Name", "test@email.com", "1234567890", "testPassword");
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.empty());
         when(userRepository.save(user)).thenReturn(user);
@@ -50,7 +55,7 @@ public class UserServiceTest {
     void createUser_duplicateEmail_throwsException() {
 
         // Arrange: user email already exists in repository
-        User user = new User("Duplicate Email User", "duplicate@email.com", "1111111111");
+        User user = new User("Duplicate Email User", "duplicate@email.com", "1111111111", "testPassword");
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(new User()));
         when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.empty());
 
@@ -68,7 +73,7 @@ public class UserServiceTest {
     void createUser_duplicatePhone_throwsException() {
 
         // Arrange: user phone already exists
-        User user = new User("Duplicate Phone User","new@email.com", "9999999999");
+        User user = new User("Duplicate Phone User","new@email.com", "9999999999", "testPassword");
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.of(new User()));
 
@@ -86,7 +91,7 @@ public class UserServiceTest {
     void createUser_missingEmailAndPhone_throwsException() {
 
         // Arrange: user has neither email nor phone
-        User user = new User("Test Name", null, null);
+        User user = new User("Test Name", null, null, "testPassword");
 
         // Act
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -96,5 +101,23 @@ public class UserServiceTest {
         //Assert
         assertEquals("Email or phone must be provided.", exception.getMessage());
         verify(userRepository, never()).save(user);
+    }
+
+    @Test
+    void testPasswordIsHashed() {
+        // Arrange:
+        String plainPassword = "MySecret123!";
+        User user = new User("Alice", "alice@email.com", "+123456789", plainPassword);
+
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findByPhone(user.getPhone())).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        User savedUser = userService.createUser(user);
+
+        // Assert
+        assertNotEquals(plainPassword, savedUser.getPassword(), "Password should be hashed and not equal to plain text");
+        assertTrue(passwordEncoder.matches(plainPassword, savedUser.getPassword()), "Hashed password should match the plain password");
     }
 }
