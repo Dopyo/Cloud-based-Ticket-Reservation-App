@@ -1,11 +1,15 @@
 package com.ticket.reservation.controller;
 
-import com.ticket.reservation.model.Event;
-import com.ticket.reservation.service.EventService;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ticket.reservation.model.Event;
+import com.ticket.reservation.service.EventService;
 
 @RestController
 @RequestMapping("/api/events")
@@ -27,21 +31,21 @@ public class EventController {
         return eventService.searchEvents(name);
     }
 
-	@GetMapping("/search/category/{category}")
-	public List<Event> searchEventsByCatergory(@PathVariable String category){
+	@GetMapping("/search/category")
+	public List<Event> searchEventsByCategory(@RequestParam String category) {
 		return eventService.searchEventsByCategory(category);
 	}
 
-	@GetMapping("/search/location/{location}")
-	public List<Event> searchEventsByLocation(@PathVariable String location) {
+	@GetMapping("/search/location")
+	public List<Event> searchEventsByLocation(@RequestParam String location) {
 		return eventService.searchEventsByLocation(location);
 	}
 
-	@GetMapping("/search/date/{year}/{month}/{dayOfMonth}/{hour}/{minute}")
-	public List<Event> searchEventsByDate(@PathVariable int year,
-			@PathVariable int month, @PathVariable int dayOfMonth,
-			@PathVariable int hour, @PathVariable int minute) {
-		return eventService.searchEventsByDate(LocalDateTime.of(year, month, dayOfMonth, hour, minute, 0, 0));
+	@GetMapping("/search/datetime")
+	public List<Event> searchEventsByDateTime(@RequestParam int year,
+			@RequestParam int month, @RequestParam int dayOfMonth,
+			@RequestParam int hour, @RequestParam int minute) {
+		return eventService.searchEventsByDateTime(LocalDateTime.of(year, month, dayOfMonth, hour, minute, 0, 0));
 	}
 
 }
