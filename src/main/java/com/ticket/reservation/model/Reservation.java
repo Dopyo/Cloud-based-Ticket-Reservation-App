@@ -12,9 +12,7 @@ public class Reservation {
     private String id;
 
     private String customerId;
-
     private LocalDateTime bookingDate;
-
     private String status;
 
     public Reservation() {}
