@@ -1,9 +1,14 @@
 package com.ticket.reservation.service;
 
 import java.time.LocalDateTime;
-import com.ticket.reservation.model.*;
+
 import org.springframework.stereotype.Service;
 
+import com.ticket.reservation.model.Event;
+import com.ticket.reservation.model.Notification;
+import com.ticket.reservation.model.Reservation;
+import com.ticket.reservation.model.Ticket;
+import com.ticket.reservation.model.User;
 import com.ticket.reservation.repository.EventRepository;
 import com.ticket.reservation.repository.ReservationRepository;
 import com.ticket.reservation.repository.TicketRepository;
@@ -87,5 +92,9 @@ public class ReservationService {
         }
 
         return reservation;
+    }
+
+    public java.util.List<Reservation> getReservationsByCustomerId(String customerId) {
+        return reservationRepository.findByCustomerId(customerId);
     }
 }
