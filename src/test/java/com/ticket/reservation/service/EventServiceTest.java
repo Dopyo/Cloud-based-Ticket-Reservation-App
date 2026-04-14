@@ -100,7 +100,7 @@ class EventServiceTest {
 
         when(eventRepository.findByCategoryIgnoreCaseAndIsCancelledFalse("concert"))
                 .thenReturn(List.of(event));
-        when(eventRepository.findByLocationIgnoreCaseAndIsCancelledFalse("montreal"))
+        when(eventRepository.findByLocationContainingIgnoreCaseAndIsCancelledFalse("montreal"))
                 .thenReturn(List.of(event));
         when(eventRepository.findByDateTimeBetweenAndIsCancelledFalse(any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(List.of(event));
